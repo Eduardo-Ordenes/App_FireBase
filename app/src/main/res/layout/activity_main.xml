@@ -49,6 +49,14 @@
             android:layout_weight="1"
             android:onClick="onClick3"
             android:text="..." />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="239dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="botonListar"
+            android:text="Listar Contatctos" />
     </LinearLayout>
 
     <EditText

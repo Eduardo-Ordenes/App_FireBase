@@ -162,6 +162,28 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(MainActivity.this, "El nombre ("+nombre+") ya existe.\nimposible modificar!!", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
+
+
+                                //PARTE QUE YO AGREGUE
+
+                                if(x.child("correo").getValue().toString().equalsIgnoreCase(correo)){
+                                    res2 = true;
+                                    ocultarTeclado();
+                                    Toast.makeText(MainActivity.this, "El correo ("+correo+") ya existe.\nimposible modificar!!", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+
+                                if(x.child("telefono").getValue().toString().equalsIgnoreCase(telefono)){
+                                    res2 = true;
+                                    ocultarTeclado();
+                                    Toast.makeText(MainActivity.this, "El telefono ("+telefono+") ya existe.\nimposible modificar!!", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+
+                                //PARTE AGREGADA FIN
+
+
+
                             }
 
                             if(res2 == false){
@@ -259,6 +281,75 @@ public class MainActivity extends AppCompatActivity {
         });
 
     } // Cierra el método
+
+
+
+    public void botonListar(View view){
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference dbref = db.getReference(Agenda.class.getSimpleName());
+
+        ArrayList<Agenda> listaagenda = new ArrayList<Agenda>();
+        ArrayAdapter<Agenda> adapter = new ArrayAdapter <Agenda> (MainActivity.this, android.R.layout.simple_list_item_1, listaagenda);
+        lvDatos.setAdapter(adapter);
+
+
+        dbref.addChildEventListener(new ChildEventListener() {
+            @Override
+            //ocurre cuando se agregar un nuevo registro
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Agenda agenda = snapshot.getValue(Agenda.class);
+                listaagenda.add(agenda);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            // ocurre cuando se modifica o elimina un registro
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        lvDatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Agenda agenda = listaagenda.get(i);
+                AlertDialog.Builder a = new AlertDialog.Builder(MainActivity.this);
+                a.setCancelable(true);
+                a.setTitle("Contacto Seleccionado");
+                String msg = "ID : " + agenda.getId() +"\n\n";
+                msg += "NOMBRE : " + agenda.getNombre();
+                a.setMessage(msg);
+                a.show();
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
 
 
 
